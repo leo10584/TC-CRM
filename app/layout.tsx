@@ -1,12 +1,14 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
+import { Inter } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/lib/providers/auth-provider"
 import { QueryProvider } from "@/lib/providers/query-provider"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
+import { Toaster } from "@/components/ui/toaster"
+
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Tatvacare HealthtechCRM",
@@ -23,19 +25,13 @@ export default async function RootLayout({
 
   return (
     <html lang="en-IN">
-      <head>
-        <style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}</style>
-      </head>
-      <body>
+      <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              {children}
+              <Toaster />
+            </QueryProvider>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

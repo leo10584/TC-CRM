@@ -1,7 +1,7 @@
 import { getRequestConfig } from "next-intl/server"
 
 export default getRequestConfig(async () => {
-  const locale = "en-IN" // Default locale for Indian market
+  const locale = "en-IN"
 
   return {
     locale,

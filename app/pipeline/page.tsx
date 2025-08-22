@@ -8,7 +8,6 @@ import { formatINRCompact } from "@/lib/utils/currency"
 import { Building2, Calendar, User } from "lucide-react"
 
 export default function PipelinePage() {
-  // Mock pipeline data
   const stages = [
     {
       name: "Qualification",
@@ -22,6 +21,11 @@ export default function PipelinePage() {
           closeDate: "2024-02-15",
           vertical: "Hospital",
         },
+      ],
+    },
+    {
+      name: "Needs Analysis",
+      opportunities: [
         {
           id: "2",
           name: "Biocon - Research Data Management",
@@ -34,84 +38,22 @@ export default function PipelinePage() {
       ],
     },
     {
-      name: "Needs Analysis",
-      opportunities: [
-        {
-          id: "3",
-          name: "Cipla - Supply Chain Optimization",
-          account: "Cipla",
-          value: 950000,
-          owner: "Amit Patel",
-          closeDate: "2024-02-10",
-          vertical: "Pharma",
-        },
-      ],
-    },
-    {
       name: "Proposal",
-      opportunities: [
-        {
-          id: "4",
-          name: "Fortis - Patient Management System",
-          account: "Fortis Healthcare",
-          value: 1500000,
-          owner: "Sneha Reddy",
-          closeDate: "2024-01-30",
-          vertical: "Hospital",
-        },
-      ],
+      opportunities: [],
     },
     {
       name: "Negotiation",
-      opportunities: [
-        {
-          id: "5",
-          name: "Max Healthcare - Medical Device Integration",
-          account: "Max Healthcare",
-          value: 2200000,
-          owner: "Vikram Singh",
-          closeDate: "2024-01-25",
-          vertical: "Hospital",
-        },
-      ],
+      opportunities: [],
     },
     {
       name: "Closed Won",
-      opportunities: [
-        {
-          id: "6",
-          name: "Dr. Reddy's - Regulatory Compliance",
-          account: "Dr. Reddy's Laboratories",
-          value: 1800000,
-          owner: "Meera Joshi",
-          closeDate: "2024-01-15",
-          vertical: "Pharma",
-        },
-      ],
+      opportunities: [],
     },
   ]
-
-  const getVerticalColor = (vertical: string) => {
-    switch (vertical) {
-      case "Pharma":
-        return "bg-blue-100 text-blue-800"
-      case "Biotech":
-        return "bg-green-100 text-green-800"
-      case "Hospital":
-        return "bg-purple-100 text-purple-800"
-      case "MedDevice":
-        return "bg-orange-100 text-orange-800"
-      case "CRO":
-        return "bg-teal-100 text-teal-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
 
   return (
     <MainLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Sales Pipeline</h1>
@@ -123,7 +65,6 @@ export default function PipelinePage() {
           </Button>
         </div>
 
-        {/* Pipeline Board */}
         <div className="flex gap-6 overflow-x-auto pb-4">
           {stages.map((stage) => (
             <div key={stage.name} className="flex-shrink-0 w-80">
@@ -145,7 +86,7 @@ export default function PipelinePage() {
 
                         <div className="flex items-center justify-between">
                           <span className="text-lg font-bold text-primary">{formatINRCompact(opp.value)}</span>
-                          <Badge className={getVerticalColor(opp.vertical)}>{opp.vertical}</Badge>
+                          <Badge className="bg-purple-100 text-purple-800">{opp.vertical}</Badge>
                         </div>
 
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -173,48 +114,6 @@ export default function PipelinePage() {
             </div>
           ))}
         </div>
-
-        {/* Pipeline Summary */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Pipeline Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">
-                  {stages.reduce((acc, stage) => acc + stage.opportunities.length, 0)}
-                </div>
-                <div className="text-sm text-muted-foreground">Total Opportunities</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">
-                  {formatINRCompact(
-                    stages.reduce(
-                      (acc, stage) => acc + stage.opportunities.reduce((stageAcc, opp) => stageAcc + opp.value, 0),
-                      0,
-                    ),
-                  )}
-                </div>
-                <div className="text-sm text-muted-foreground">Total Pipeline Value</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">
-                  {formatINRCompact(
-                    stages
-                      .find((s) => s.name === "Closed Won")
-                      ?.opportunities.reduce((acc, opp) => acc + opp.value, 0) || 0,
-                  )}
-                </div>
-                <div className="text-sm text-muted-foreground">Won This Month</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">24.5%</div>
-                <div className="text-sm text-muted-foreground">Win Rate</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </MainLayout>
   )

@@ -5,10 +5,10 @@ const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   images: {
     unoptimized: true,
@@ -17,12 +17,11 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react'],
   },
   async rewrites() {
-    // Proxy API calls to backend in development
     if (process.env.NODE_ENV === 'development') {
       return [
         {
-          source: '/api/:path*',
-          destination: `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}/api/:path*`,
+          source: '/api/v1/:path*',
+          destination: `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}/api/v1/:path*`,
         },
       ];
     }

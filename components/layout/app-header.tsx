@@ -3,14 +3,6 @@
 import { Bell, Search, Settings, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { useTranslations } from "next-intl"
 
@@ -36,30 +28,10 @@ export function AppHeader() {
         </Button>
 
         {/* User Menu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="gap-2">
-              <User className="h-4 w-4" />
-              <span className="hidden sm:inline">Profile</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>{t("profile")}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>{t("settings")}</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <span>{t("logout")}</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button variant="ghost" size="sm" className="gap-2">
+          <User className="h-4 w-4" />
+          <span className="hidden sm:inline">Profile</span>
+        </Button>
       </div>
     </header>
   )

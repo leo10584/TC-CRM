@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -147,7 +146,7 @@ export function AppSidebar() {
           "w-full justify-start gap-2 h-9",
           level > 0 && "ml-4",
           isActive
-            ? "bg-sidebar-primary text-sidebar-primary-foreground"
+            ? "bg-primary text-primary-foreground"
             : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
         )}
         asChild
@@ -166,15 +165,15 @@ export function AppSidebar() {
   }
 
   return (
-    <div className="flex h-full w-64 flex-col bg-sidebar border-r border-sidebar-border">
+    <div className="flex h-full w-64 flex-col bg-card border-r border-border">
       {/* Logo */}
-      <div className="flex h-16 items-center border-b border-sidebar-border px-6">
+      <div className="flex h-16 items-center border-b border-border px-6">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded bg-primary flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">TC</span>
           </div>
           <div>
-            <h1 className="font-semibold text-sidebar-foreground">Tatvacare</h1>
+            <h1 className="font-semibold text-foreground">Tatvacare</h1>
             <p className="text-xs text-muted-foreground">HealthTech CRM</p>
           </div>
         </div>
@@ -184,13 +183,13 @@ export function AppSidebar() {
       <nav className="flex-1 space-y-1 p-4">{navItems.map((item) => renderNavItem(item))}</nav>
 
       {/* User section */}
-      <div className="border-t border-sidebar-border p-4">
+      <div className="border-t border-border p-4">
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
             <span className="text-primary-foreground text-sm font-medium">U</span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">User Name</p>
+            <p className="text-sm font-medium text-foreground truncate">User Name</p>
             <p className="text-xs text-muted-foreground truncate">user@tatvacare.com</p>
           </div>
         </div>

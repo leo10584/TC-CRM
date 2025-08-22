@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { useForm, useFieldArray } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useTranslations } from "next-intl"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,8 +11,22 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { rfpCreateSchema, type RfpCreateInput } from "@/lib/validations/rfp"
 import { Plus, X, Upload, FileText } from "lucide-react"
+
+const rfpCreateSchema = z.object({
+  channel: z.enum(["email", "web", "partner"]),
+  accountName: z.string().min(1, "Account name is required"),
+  contactName: z.string().min(1, "Contact name is required"),
+  contactEmail: z.string().email("Please enter a valid email address"),
+  contactPhone: z.string().optional(),
+  summary: z.string().min(10, "Summary must be at least 10 characters"),
+  scopeItems: z.array(z.string()).min(1, "At least one scope item is required"),
+  priority: z.enum(["low", "medium", "high"]).default("medium"),
+  expectedBudget: z.number().optional(),
+  expectedTimeline: z.string().optional(),
+})
+
+type RfpCreateInput = z.infer<typeof rfpCreateSchema>
 
 interface RfpFormProps {
   onSubmit: (data: RfpCreateInput) => void
@@ -20,7 +34,6 @@ interface RfpFormProps {
 }
 
 export function RfpForm({ onSubmit, isLoading }: RfpFormProps) {
-  const t = useTranslations("rfp")
   const [scopeItem, setScopeItem] = useState("")
 
   const form = useForm<RfpCreateInput>({
@@ -29,24 +42,20 @@ export function RfpForm({ onSubmit, isLoading }: RfpFormProps) {
       channel: "web",
       scopeItems: [],
       priority: "medium",
-      currency: "INR",
     },
   })
 
-  const {
-    fields: scopeFields,
-    append: appendScope,
-    remove: removeScope,
-  } = useFieldArray({
-    control: form.control,
-    name: "scopeItems",
-  })
+  const scopeItems = form.watch("scopeItems")
 
   const addScopeItem = () => {
     if (scopeItem.trim()) {
-      appendScope(scopeItem.trim())
+      form.setValue("scopeItems", [...scopeItems, scopeItem.trim()])
       setScopeItem("")
     }
+  }
+
+  const removeScopeItem = (index: number) => {
+    form.setValue("scopeItems", scopeItems.filter((_, i) => i !== index))
   }
 
   const handleSubmit = (data: RfpCreateInput) => {
@@ -56,27 +65,23 @@ export function RfpForm({ onSubmit, isLoading }: RfpFormProps) {
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Basic Information */}
         <Card>
           <CardHeader>
             <CardTitle>Basic Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="channel">{t("channel")}</Label>
+              <Label htmlFor="channel">Channel</Label>
               <Select value={form.watch("channel")} onValueChange={(value) => form.setValue("channel", value as any)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select channel" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="email">{t("channels.email")}</SelectItem>
-                  <SelectItem value="web">{t("channels.web")}</SelectItem>
-                  <SelectItem value="partner">{t("channels.partner")}</SelectItem>
+                  <SelectItem value="email">Email</SelectItem>
+                  <SelectItem value="web">Web Form</SelectItem>
+                  <SelectItem value="partner">Partner</SelectItem>
                 </SelectContent>
               </Select>
-              {form.formState.errors.channel && (
-                <p className="text-sm text-destructive">{form.formState.errors.channel.message}</p>
-              )}
             </div>
 
             <div className="space-y-2">
@@ -110,7 +115,6 @@ export function RfpForm({ onSubmit, isLoading }: RfpFormProps) {
           </CardContent>
         </Card>
 
-        {/* Account & Contact Information */}
         <Card>
           <CardHeader>
             <CardTitle>Account & Contact</CardTitle>
@@ -153,14 +157,13 @@ export function RfpForm({ onSubmit, isLoading }: RfpFormProps) {
         </Card>
       </div>
 
-      {/* RFP Details */}
       <Card>
         <CardHeader>
           <CardTitle>RFP Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="summary">{t("summary")}</Label>
+            <Label htmlFor="summary">Summary</Label>
             <Textarea
               id="summary"
               placeholder="Provide a detailed summary of the RFP requirements"
@@ -173,7 +176,7 @@ export function RfpForm({ onSubmit, isLoading }: RfpFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>{t("scopeItems")}</Label>
+            <Label>Scope Items</Label>
             <div className="flex gap-2">
               <Input
                 placeholder="Add scope item"
@@ -186,10 +189,10 @@ export function RfpForm({ onSubmit, isLoading }: RfpFormProps) {
               </Button>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
-              {scopeFields.map((field, index) => (
-                <Badge key={field.id} variant="secondary" className="gap-1">
-                  {field.value}
-                  <button type="button" onClick={() => removeScope(index)} className="ml-1 hover:text-destructive">
+              {scopeItems.map((item, index) => (
+                <Badge key={index} variant="secondary" className="gap-1">
+                  {item}
+                  <button type="button" onClick={() => removeScopeItem(index)} className="ml-1 hover:text-destructive">
                     <X className="h-3 w-3" />
                   </button>
                 </Badge>
@@ -199,22 +202,9 @@ export function RfpForm({ onSubmit, isLoading }: RfpFormProps) {
               <p className="text-sm text-destructive">{form.formState.errors.scopeItems.message}</p>
             )}
           </div>
-
-          <div className="space-y-2">
-            <Label>Attachments</Label>
-            <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-              <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Drag and drop files here, or click to browse</p>
-              <Button type="button" variant="outline" size="sm" className="mt-2 bg-transparent">
-                <FileText className="h-4 w-4 mr-2" />
-                Choose Files
-              </Button>
-            </div>
-          </div>
         </CardContent>
       </Card>
 
-      {/* Actions */}
       <div className="flex justify-end gap-4">
         <Button type="button" variant="outline">
           Save as Draft
