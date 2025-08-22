@@ -1,0 +1,157 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "close": "Close",
+    "open": "Open",
+    "view": "View",
+    "download": "Download",
+    "upload": "Upload",
+    "send": "Send",
+    "approve": "Approve",
+    "reject": "Reject",
+    "pending": "Pending",
+    "completed": "Completed",
+    "draft": "Draft",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "currency": {
+    "inr": "₹",
+    "format": "₹{amount}"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "pipeline": "Pipeline",
+    "opportunities": "Opportunities",
+    "quotes": "Quotes",
+    "rfp": "RFP",
+    "reports": "Reports",
+    "admin": "Admin",
+    "settings": "Settings",
+    "audit": "Audit Trail",
+    "search": "Search",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to Tatvacare CRM",
+    "kpis": {
+      "totalOpportunities": "Total Opportunities",
+      "pipelineValue": "Pipeline Value",
+      "conversionRate": "Conversion Rate",
+      "avgDealSize": "Average Deal Size",
+      "monthlyRevenue": "Monthly Revenue"
+    }
+  },
+  "rfp": {
+    "title": "Request for Proposal",
+    "new": "New RFP",
+    "channel": "Channel",
+    "summary": "Summary",
+    "scopeItems": "Scope Items",
+    "attachments": "Attachments",
+    "channels": {
+      "email": "Email",
+      "web": "Web Form",
+      "partner": "Partner"
+    }
+  },
+  "opportunities": {
+    "title": "Opportunities",
+    "new": "New Opportunity",
+    "name": "Opportunity Name",
+    "value": "Value",
+    "stage": "Stage",
+    "owner": "Owner",
+    "account": "Account",
+    "stages": {
+      "qualification": "Qualification",
+      "needs_analysis": "Needs Analysis",
+      "proposal": "Proposal",
+      "negotiation": "Negotiation",
+      "closed_won": "Closed Won",
+      "closed_lost": "Closed Lost"
+    }
+  },
+  "quotes": {
+    "title": "Quotes",
+    "new": "New Quote",
+    "template": "Template",
+    "lineItems": "Line Items",
+    "taxes": "Taxes",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "taxTotal": "Tax Total",
+    "grandTotal": "Grand Total",
+    "discount": "Discount",
+    "status": {
+      "draft": "Draft",
+      "awaiting_approval": "Awaiting Approval",
+      "approved": "Approved",
+      "sent": "Sent",
+      "signed": "Signed",
+      "declined": "Declined"
+    },
+    "taxes": {
+      "cgst": "CGST",
+      "sgst": "SGST",
+      "igst": "IGST"
+    }
+  },
+  "esign": {
+    "title": "E-Signature",
+    "status": "Status",
+    "provider": "Provider",
+    "envelope": "Envelope",
+    "certificate": "Certificate",
+    "recipients": "Recipients",
+    "statuses": {
+      "created": "Created",
+      "sent": "Sent",
+      "completed": "Completed",
+      "declined": "Declined"
+    }
+  },
+  "audit": {
+    "title": "Audit Trail",
+    "event": "Event",
+    "actor": "Actor",
+    "timestamp": "Timestamp",
+    "entity": "Entity",
+    "action": "Action",
+    "changes": "Changes",
+    "export": "Export Audit Package"
+  },
+  "verticals": {
+    "pharma": "Pharmaceutical",
+    "biotech": "Biotechnology",
+    "meddevice": "Medical Device",
+    "cro": "Contract Research Organization",
+    "hospital": "Hospital"
+  },
+  "errors": {
+    "unauthorized": "You are not authorized to perform this action",
+    "notFound": "The requested resource was not found",
+    "serverError": "An internal server error occurred",
+    "networkError": "Network error. Please check your connection",
+    "validationError": "Please check the form for errors"
+  }
+}

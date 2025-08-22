@@ -1,0 +1,326 @@
+openapi: 3.0.3
+info:
+  title: Tatvacare HealthtechCRM Core API
+  version: 0.1.0
+servers:
+  - url: https://api.example.com
+paths:
+  /rfps:
+    post:
+      summary: Create an RFP
+      operationId: createRfp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RfpCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rfp'
+  /opportunities:
+    post:
+      summary: Create opportunity
+      operationId: createOpportunity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpportunityCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Opportunity'
+  /opportunities/{id}/stage:
+    patch:
+      summary: Advance or change stage
+      operationId: updateOppStage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                stage:
+                  type: string
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Opportunity'
+  /quotes:
+    post:
+      summary: Create quote
+      operationId: createQuote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+  /quotes/{id}/send:
+    post:
+      summary: Send quote via user's mailbox
+      operationId: sendQuote
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                to: { type: array, items: { type: string, format: email } }
+                cc: { type: array, items: { type: string, format: email } }
+                subject: { type: string }
+                bodyHtml: { type: string }
+      responses:
+        '202':
+          description: Accepted
+  /quotes/{id}/esign:
+    post:
+      summary: Create e-sign envelope for quote
+      operationId: createEnvelope
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                provider: { type: string, enum: [DocuSign, Adobe] }
+                recipients:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name: { type: string }
+                      email: { type: string, format: email }
+      responses:
+        '201':
+          description: Envelope created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EsignEnvelope'
+  /esign/webhook:
+    post:
+      summary: Provider webhook
+      operationId: esignWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: OK
+  /email/threads/{entityType}/{entityId}:
+    get:
+      summary: Get email thread for entity
+      operationId: getThread
+      parameters:
+        - name: entityType
+          in: path
+          required: true
+          schema: { type: string, enum: [lead, opportunity, quote] }
+        - name: entityId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Thread
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items: { $ref: '#/components/schemas/Email' }
+  /audit:
+    get:
+      summary: List audit events
+      operationId: listAudit
+      parameters:
+        - name: entityType
+          in: query
+          schema: { type: string }
+        - name: entityId
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/AuditEvent' }
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        industry: { type: string }
+        type: { type: string, enum: [Pharma, Biotech, MedDevice, CRO, Hospital] }
+        gstNumber: { type: string }
+    Contact:
+      type: object
+      properties:
+        id: { type: string }
+        accountId: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        phone: { type: string }
+    RfpCreate:
+      type: object
+      required: [channel, summary]
+      properties:
+        channel: { type: string, enum: [email, web, partner] }
+        accountId: { type: string }
+        summary: { type: string }
+        scopeItems:
+          type: array
+          items: { type: string }
+        attachments:
+          type: array
+          items: { type: string, description: "file URLs" }
+    Rfp:
+      allOf:
+        - $ref: '#/components/schemas/RfpCreate'
+        - type: object
+          properties:
+            id: { type: string }
+            status: { type: string, enum: [new, triaged, in_progress, closed] }
+    OpportunityCreate:
+      type: object
+      required: [accountId, name]
+      properties:
+        accountId: { type: string }
+        name: { type: string }
+        value: { type: number }
+        currency: { type: string, default: "INR" }
+        stage: { type: string, default: "qualification" }
+    Opportunity:
+      allOf:
+        - $ref: '#/components/schemas/OpportunityCreate'
+        - type: object
+          properties:
+            id: { type: string }
+            ownerId: { type: string }
+    QuoteCreate:
+      type: object
+      required: [oppId, templateId, lines]
+      properties:
+        oppId: { type: string }
+        templateId: { type: string }
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuoteLine'
+        taxes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tax'
+        currency: { type: string, default: "INR" }
+        discountsPct: { type: number, minimum: 0, maximum: 100 }
+    Quote:
+      allOf:
+        - $ref: '#/components/schemas/QuoteCreate'
+        - type: object
+          properties:
+            id: { type: string }
+            totals: { $ref: '#/components/schemas/Totals' }
+            status: { type: string, enum: [draft, awaiting_approval, approved, sent, signed, declined] }
+            pdfUrl: { type: string }
+    QuoteLine:
+      type: object
+      required: [productId, description, quantity, unitPrice]
+      properties:
+        productId: { type: string }
+        description: { type: string }
+        quantity: { type: number }
+        uom: { type: string, default: "units" }
+        unitPrice: { type: number }
+        optional: { type: boolean, default: false }
+    Tax:
+      type: object
+      properties:
+        type: { type: string, enum: [CGST, SGST, IGST] }
+        ratePct: { type: number }
+    Totals:
+      type: object
+      properties:
+        subtotal: { type: number }
+        taxTotal: { type: number }
+        grandTotal: { type: number }
+    Email:
+      type: object
+      properties:
+        id: { type: string }
+        from: { type: string }
+        to: { type: array, items: { type: string } }
+        subject: { type: string }
+        sentAt: { type: string, format: date-time }
+        bodyHtml: { type: string }
+    EsignEnvelope:
+      type: object
+      properties:
+        id: { type: string }
+        provider: { type: string }
+        quoteId: { type: string }
+        status: { type: string, enum: [created, sent, completed, declined] }
+        certUrl: { type: string }
+    AuditEvent:
+      type: object
+      properties:
+        id: { type: string }
+        ts: { type: string, format: date-time }
+        actorId: { type: string }
+        action: { type: string }
+        entityType: { type: string }
+        entityId: { type: string }
+        beforeHash: { type: string }
+        afterHash: { type: string }
