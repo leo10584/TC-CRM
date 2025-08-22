@@ -12,8 +12,12 @@ defaults:
   NEXT_PUBLIC_FEATURE_CALENDAR: "true"
   NEXT_PUBLIC_FEATURE_ESIGN: "true"
   NEXT_PUBLIC_FEATURE_RAZORPAY: "false"
+  NEXT_PUBLIC_OTEL_EXPORTER_OTLP_ENDPOINT: ""
+  NEXT_PUBLIC_OTEL_SERVICE_NAME: "tatvacare-crm"
 
 # Notes:
 # - Keys that start with NEXT_PUBLIC_ are exposed to the browser. Do NOT put secrets there.
 # - Set these in Vercel → Project → Settings → Environment Variables for Production, Preview, and Development.
 # - For local dev (Next.js), you can copy these into a .env.local file (not committed).
+# - Generate NEXTAUTH_SECRET with: openssl rand -base64 32
+# - Auth0 setup guide available in DEPLOYMENT.md
