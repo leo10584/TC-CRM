@@ -274,4 +274,4 @@ See [CHANGELOG.md](CHANGELOG.md) for a list of changes and version history.
 **Built with ❤️ for Healthcare B2B Sales Teams**
 \`\`\`
 
-```json file="" isHidden
+\`\`\`json file="" isHidden
